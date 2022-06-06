@@ -68,20 +68,24 @@
                         <div class="table-responsive">
                             <table class="table table-striped" id="userTable">
                                 <thead>
-                                    <tr>
+                                    <tr >
                                         <th style="width: 20%" scope="col"></th>
                                         <th style="width: 20%" scope="col">Title</th>
                                         <th style="width: 60%" scope="col">Description</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr th:each="note : ${notes}">
                                         <td>
-                                            <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <form action="#" th:action="@{'/home/note'}" th:object="${noteForm}" method="POST">
+                                            <button type="submit" class="btn btn-success">Edit</button>
+                                            </form>
+                                            <form action="#" th:action="@{'/home/note/'+${note.noteId}+'/actions/delete'}" th:object="${noteForm}" method="POST">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
                                         </td>
-                                        <th scope="row">Example Note Title</th>
-                                        <td>Example Note Description </td>
+                                        <th scope="row" th:text="${note.noteTitle}"></th>
+                                        <td th:text="${note.noteDescription}"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -97,7 +101,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
+                                        <form action="#" th:action="@{'/home/note'}" th:object="${noteForm}" method="POST">
                                             <input type="hidden" name="noteId" id="note-id">
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
