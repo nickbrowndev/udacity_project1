@@ -24,6 +24,10 @@ public class NoteService {
         return noteMapper.insert(new Note(null, user, note.getNoteTitle(), note.getNoteDescription()));
     }
 
+    public boolean updateNote(Note note, User user) {
+        return noteMapper.update(new Note(note.getNoteId(), user, note.getNoteTitle(), note.getNoteDescription()));
+    }
+
     public List<Note> getNotesForUser(User user) {
         return noteMapper.getNotesForUser(user);
     }

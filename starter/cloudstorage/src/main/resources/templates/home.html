@@ -77,9 +77,7 @@
                                 <tbody>
                                     <tr th:each="note : ${notes}">
                                         <td>
-                                            <form action="#" th:action="@{'/home/note'}" th:object="${noteForm}" method="POST">
-                                            <button type="submit" class="btn btn-success">Edit</button>
-                                            </form>
+                                            <button type="button" class="btn btn-success" th:onclick="showNoteModal([[${note.noteId}]],[[${note.noteTitle}]], [[${note.noteDescription}]])">Edit</button>
                                             <form action="#" th:action="@{'/home/note/'+${note.noteId}+'/actions/delete'}" th:object="${noteForm}" method="POST">
                                             <button type="submit" class="btn btn-danger">Delete</button>
                                             </form>

@@ -37,11 +37,21 @@ public class HomeController {
         model.addAttribute("notes", noteService.getNotesForUser(currentUser));
         return "home";
     }
+    public String getNotePage(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
+
+        User currentUser = getCurrentUser(authentication);
+        model.addAttribute("notes", noteService.getNotesForUser(currentUser));
+        return "home";
+    }
 
     @PostMapping("/note")
     public String postNote(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
         User currentUser = getCurrentUser(authentication);
-        noteService.createNote(note, currentUser);
+        if (note.getNoteId() != null) {
+            noteService.updateNote(note, currentUser);
+        } else {
+            noteService.createNote(note, currentUser);
+        }
         model.addAttribute("notes", noteService.getNotesForUser(currentUser));
         return "home";
     }
