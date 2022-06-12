@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
-@ControllerAdvice
+//@ControllerAdvice
 public class ErrorHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ErrorHandler.class);

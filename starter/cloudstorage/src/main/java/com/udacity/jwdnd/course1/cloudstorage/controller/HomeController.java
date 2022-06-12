@@ -1,8 +1,10 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 
+import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.slf4j.Logger;
@@ -23,57 +25,44 @@ import java.util.Objects;
 public class HomeController {
 
     private static final Logger log = LoggerFactory.getLogger(HomeController.class);
-    private UserService userService;
-    private NoteService noteService;
-    public HomeController(UserService userService, NoteService noteService) {
+    private final UserService userService;
+    private final NoteService noteService;
+    private final FileService fileService;
+
+    public HomeController(UserService userService, NoteService noteService, FileService fileService) {
         this.userService = Objects.requireNonNull(userService);
         this.noteService = Objects.requireNonNull(noteService);
+        this.fileService = Objects.requireNonNull(fileService);
     }
 
     @GetMapping
     public String getHomePage(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
 
-        User currentUser = getCurrentUser(authentication);
+        User currentUser = userService.getCurrentUser(authentication);
+        model.addAttribute("files", fileService.getFilesForUser(authentication));
         model.addAttribute("notes", noteService.getNotesForUser(currentUser));
         return "home";
     }
     public String getNotePage(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
 
-        User currentUser = getCurrentUser(authentication);
+        User currentUser = userService.getCurrentUser(authentication);
         model.addAttribute("notes", noteService.getNotesForUser(currentUser));
         return "home";
     }
 
-    @PostMapping("/note")
-    public String postNote(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
-        if (note.getNoteId() != null) {
-            noteService.updateNote(note, currentUser);
-        } else {
-            noteService.createNote(note, currentUser);
-        }
-        model.addAttribute("notes", noteService.getNotesForUser(currentUser));
-        return "home";
-    }
 
-    @PostMapping("/note/{noteId}/actions/delete")
-    public String deleteNote(@PathVariable("noteId") String noteId) {
-        noteService.deleteNote(Integer.valueOf(noteId));
-        return "home";
-    }
 
     @ModelAttribute
     public List<Note> getNotes(Authentication authentication) {
-        User currentUser = getCurrentUser(authentication);
+        User currentUser = userService.getCurrentUser(authentication);
         return noteService.getNotesForUser(currentUser);
     }
 
-    private User getCurrentUser(Authentication authentication) {
-        String username = authentication.getName();
-        User currentUser = userService.getUserByUsername(username);
-
-        return currentUser;
+    @ModelAttribute
+    public List<File> getFiles(Authentication authentication) {
+        return fileService.getFilesForUser(authentication);
     }
+
 
 
 }
