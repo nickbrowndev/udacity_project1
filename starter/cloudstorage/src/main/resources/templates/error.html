@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+
+        <title>Error</title>
+    </head>
+    <body class="p-3 mb-2 bg-light text-black">
+        <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
+            <h1 class="display-5">An Error Has Occurred</h1>
+            <p>Timestamp:<span th:text="${timestamp}"></span></p>
+            <p>Error:<span th:text="${error}"></span></p>
+            <p>Path:<span th:text="${path}"></span></p>
+            <p>Status:<span th:text="${status}"></span></p>
+            <p>Errors:<span th:text="${errors}"></span></p>
+            <p>Exception:<span th:text="${exception}"></span></p>
+            <p>Message:<span th:text="${message}"></span></p>
+            <p>Stacktrace:<span th:text="${trace}"></span></p>
+        </div>
+    </body>
+</html>
