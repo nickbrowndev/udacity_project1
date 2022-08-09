@@ -13,7 +13,7 @@ import java.util.Objects;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     public SecurityConfig(AuthenticationService authenticationService) {
         this.authenticationService = Objects.requireNonNull(authenticationService);
@@ -27,13 +27,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/signup", "/css/**", "/js/**").permitAll()
+                .antMatchers("/signup", "/css/**", "/js/**", "/login")
+                .permitAll()
                 .anyRequest().authenticated();
 
         http.formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/home", true);
+                .defaultSuccessUrl("/home", true)
+                .failureUrl("/login?invalid=true")
+                .and()
+                .logout((logout) -> logout
+                        .logoutSuccessUrl("/login?loggedout=true")
+                        .deleteCookies("JSESSIONID"));
 
     }
 }
