@@ -3,10 +3,8 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
-import org.apache.catalina.authenticator.SpnegoAuthenticator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -33,11 +31,11 @@ public class FileController {
     }
 
     @GetMapping("/files")
-    public String listUploadedFiles(Model model, Authentication authentication) throws IOException {
+    public String listUploadedFiles(Model model, Authentication authentication) {
 
         model.addAttribute("files", fileService.getFilesForUser(authentication).stream().map(
                         path -> MvcUriComponentsBuilder.fromMethodName(FileController.class,
-                                "serveFile", path.getFileName().toString()).build().toUri().toString())
+                                "serveFile", path.getFileName()).build().toUri().toString())
                 .collect(Collectors.toList()));
 
         return "home";
@@ -60,11 +58,14 @@ public class FileController {
         byte[] fileData = file.getInputStream().readAllBytes();
         File newFile = new File(null, userService.getCurrentUser(authentication), file.getOriginalFilename(), file.getContentType(), fileData.length, fileData);
 
-        fileService.insert(newFile, authentication);
-        redirectAttributes.addFlashAttribute("message",
-                "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-        return "redirect:/";
+        if (!fileService.fileExists(newFile, authentication)) {
+            fileService.insert(newFile, authentication);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "You successfully uploaded " + file.getOriginalFilename() + "!");
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "File '" + file.getOriginalFilename() + "' already exists");
+        }
+        return "redirect:/home";
     }
 
 //    @ExceptionHandler(StorageFileNotFoundException.class)

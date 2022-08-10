@@ -1,10 +1,8 @@
 package com.udacity.jwdnd.course1.cloudstorage.mapper;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
-import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import org.apache.ibatis.annotations.*;
-import org.springframework.core.io.Resource;
 
 import java.util.List;
 
@@ -19,4 +17,7 @@ public interface FileMapper {
 
     @Delete("DELETE FROM FILES WHERE fileid = ${fileId}")
     void delete(Integer fileId);
+
+    @Select("SELECT COUNT(1) FROM FILES WHERE fileName = #{fileName} and userId = #{user.userId}")
+    boolean exists(File file);
 }
