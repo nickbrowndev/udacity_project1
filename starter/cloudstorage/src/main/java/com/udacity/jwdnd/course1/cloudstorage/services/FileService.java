@@ -38,4 +38,8 @@ public class FileService {
         User currentUser = userService.getCurrentUser(authentication);
         return fileMapper.exists(file);
     }
+
+    public void deleteFile(int fileId) {
+        fileMapper.delete(fileId);
+    }
 }

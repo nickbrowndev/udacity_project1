@@ -39,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout((logout) -> logout
                         .logoutSuccessUrl("/login?loggedout=true")
+                        .clearAuthentication(true)
+                        .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"));
 
     }

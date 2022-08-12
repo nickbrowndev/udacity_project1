@@ -31,13 +31,12 @@ public class NoteController {
         } else {
             noteService.createNote(note, currentUser);
         }
-        model.addAttribute("notes", noteService.getNotesForUser(currentUser));
-        return "home";
+        return "redirect:/home";
     }
 
     @PostMapping("/notes/{noteId}/actions/delete")
     public String deleteNote(@PathVariable("noteId") String noteId) {
         noteService.deleteNote(Integer.valueOf(noteId));
-        return "home";
+        return "redirect:/home";
     }
 }

@@ -68,6 +68,14 @@ public class FileController {
         return "redirect:/home";
     }
 
+    @PostMapping("/files/{fileId}/actions/delete")
+    public String deleteFile(@PathVariable("fileId") Integer fileId, RedirectAttributes redirectAttributes) {
+        fileService.deleteFile(fileId);
+        redirectAttributes.addFlashAttribute("successMessage",
+                "File deleted!");
+        return "redirect:/home";
+    }
+
 //    @ExceptionHandler(StorageFileNotFoundException.class)
 //    public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
 //        return ResponseEntity.notFound().build();
