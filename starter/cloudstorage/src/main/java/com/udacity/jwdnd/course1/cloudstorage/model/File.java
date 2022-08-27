@@ -1,7 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage.model;
 
-import org.springframework.http.MediaType;
-
 public class File {
 
 
@@ -67,7 +65,7 @@ public class File {
         return fileData;
     }
 
-    public void setFileData(byte[] blob) {
+    public void setFileData(byte[] fileData) {
         this.fileData = fileData;
     }
 

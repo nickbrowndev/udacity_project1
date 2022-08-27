@@ -11,13 +11,16 @@ public interface FileMapper {
     @Select("SELECT * FROM FILES WHERE userId = #{userId}")
     List<File> getFilesForUser(User user);
 
-    @Insert("INSERT INTO FILES (fileName, contentType, fileSize, fileData, userid) VALUES(#{fileName}, #{contentType}, #{fileSize}, #{fileData}, #{user.userId})")
+    @Select("SELECT f.*, u.userid as userid FROM FILES f JOIN USERS u ON f.userid = u.userid WHERE fileId = #{fileId}")
+    File getFile(Integer fileId);
+
+    @Insert("INSERT INTO FILES (fileName, contentType, fileSize, fileData, userId) VALUES(#{fileName}, #{contentType}, #{fileSize}, #{fileData}, #{user.userId})")
     @Options(useGeneratedKeys = true, keyProperty = "fileId")
     int insert(File file);
 
     @Delete("DELETE FROM FILES WHERE fileid = ${fileId}")
     void delete(Integer fileId);
 
-    @Select("SELECT COUNT(1) FROM FILES WHERE fileName = #{fileName} and userId = #{user.userId}")
-    boolean exists(File file);
+    @Select("SELECT COUNT(1) FROM FILES WHERE fileName = #{file.fileName} and userId = #{user.userId}")
+    boolean exists(File file, User user);
 }
