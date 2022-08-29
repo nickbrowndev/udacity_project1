@@ -10,10 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Objects;
 
-@Controller()
+@Controller
 public class NoteController {
     private final NoteService noteService;
     private final UserService userService;
@@ -24,12 +25,16 @@ public class NoteController {
     }
 
     @PostMapping("/notes")
-    public String postNote(@ModelAttribute("note") Note note, Model model, Authentication authentication) {
+    public String postNote(@ModelAttribute("note") Note note, Model model, Authentication authentication, RedirectAttributes redirectAttributes) {
         User currentUser = userService.getCurrentUser(authentication);
         if (note.getNoteId() != null) {
             noteService.updateNote(note, currentUser);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Note updated!");
         } else {
             noteService.createNote(note, currentUser);
+            redirectAttributes.addFlashAttribute("successMessage",
+                    "Note created!");
         }
         return "redirect:/home";
     }

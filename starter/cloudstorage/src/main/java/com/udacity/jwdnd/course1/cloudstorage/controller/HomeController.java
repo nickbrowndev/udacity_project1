@@ -4,6 +4,7 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
+import com.udacity.jwdnd.course1.cloudstorage.services.CredentialService;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
@@ -27,11 +28,13 @@ public class HomeController {
     private final UserService userService;
     private final NoteService noteService;
     private final FileService fileService;
+    private final CredentialService credentialService;
 
-    public HomeController(UserService userService, NoteService noteService, FileService fileService) {
+    public HomeController(UserService userService, NoteService noteService, FileService fileService, CredentialService credentialService) {
         this.userService = Objects.requireNonNull(userService);
         this.noteService = Objects.requireNonNull(noteService);
         this.fileService = Objects.requireNonNull(fileService);
+        this.credentialService = Objects.requireNonNull(credentialService);
     }
 
     @GetMapping
@@ -40,6 +43,7 @@ public class HomeController {
         User currentUser = userService.getCurrentUser(authentication);
         model.addAttribute("files", fileService.getFilesForUser(authentication));
         model.addAttribute("notes", noteService.getNotesForUser(currentUser));
+        model.addAttribute("credentials", credentialService.getCredentialsForUser(authentication));
         return "home";
     }
     public String getNotePage(@ModelAttribute("note") Note note, Model model, Authentication authentication) {

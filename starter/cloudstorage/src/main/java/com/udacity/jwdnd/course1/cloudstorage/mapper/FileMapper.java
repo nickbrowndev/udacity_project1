@@ -21,6 +21,6 @@ public interface FileMapper {
     @Delete("DELETE FROM FILES WHERE fileid = ${fileId}")
     void delete(Integer fileId);
 
-    @Select("SELECT COUNT(1) FROM FILES WHERE fileName = #{file.fileName} and userId = #{user.userId}")
+    @Select("SELECT COUNT(1) FROM FILES WHERE filename = #{file.fileName} and userId = #{user.userId}")
     boolean exists(File file, User user);
 }
